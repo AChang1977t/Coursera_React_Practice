@@ -1,84 +1,81 @@
 import React, { Component } from "react";
-import { Media } from "reactstrap";
+import {
+  Card,
+  CardImg,
+  CardImgOverlay,
+  CardText,
+  CardBody,
+  CardTitle
+} from "reactstrap";
 
 class Menu extends Component {
   constructor(props) {
     super(props);
     // define a state for components,
     this.state = {
-      // define a property call this dishes.
-      // inside to define this as a JS object which contains a list of dishes.
-      dishes: [
-        {
-          id: 0,
-          name: "Uthappizza",
-          image: "assets/images/uthappizza.png",
-          category: "mains",
-          label: "Hot",
-          price: "4.99",
-          description:
-            "A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer."
-        },
-        {
-          id: 1,
-          name: "Zucchipakoda",
-          image: "assets/images/zucchipakoda.png",
-          category: "appetizer",
-          label: "",
-          price: "1.99",
-          description:
-            "Deep fried Zucchini coated with mildly spiced Chickpea flour batter accompanied with a sweet-tangy tamarind sauce"
-        },
-        {
-          id: 2,
-          name: "Vadonut",
-          image: "assets/images/vadonut.png",
-          category: "appetizer",
-          label: "New",
-          price: "1.99",
-          description:
-            "A quintessential ConFusion experience, is it a vada or is it a donut?"
-        },
-        {
-          id: 3,
-          name: "ElaiCheese Cake",
-          image: "assets/images/elaicheesecake.png",
-          category: "dessert",
-          label: "",
-          price: "2.99",
-          description:
-            "A delectable, semi-sweet New York Style Cheese Cake, with Graham cracker crust and spiced with Indian cardamoms"
-        }
-      ]
+      // property call
+      // null initially which means that i haven't selected any,
+      // so whenever I click on any one of dishes,
+      // then that will make the dish information become equal to the selected.Dish
+      selectedDish: null
     };
   }
+
+  //Implement this onDishSelect.
+  // Received the dish as the parameter,
+  onDishSelect(dish) {
+    // Using this.setState function call,
+    // inside "dish" will be set equal to the dish which received as the parameter.
+    this.setState({ selectedDish: dish });
+  }
+
+  // Render the details of the dish
+  // this is card construct for selected dish when render it on the screen there using the card.
+  renderDish(dish) {
+    if (dish != null)
+      return (
+        // Card component
+        <Card>
+          <CardImg top src={dish.image} alt={dish.name} />
+          <CardBody>
+            <CardTitle>{dish.name}</CardTitle>
+            <CardText>{dish.description}</CardText>
+          </CardBody>
+        </Card>
+      );
+    else {
+      return <div />;
+    }
+  }
+
   render() {
-    // To define this menu as a JavaScript const, and then structuring of components here.
-    // To define an array of JS objects here,
-    // and when define a property in the state, we can set it as "this.state.dishes"
-    // map operator (.map(dish)) that is for alternate over all the items.
-    const menu = this.state.dishes.map(dish => {
+    // use "props"
+    const menu = this.props.dishes.map(dish => {
       // and then do return a lay out for the dish here
       return (
-        // key will enable it to identify each of those elements uniquely.
-        // Use Media class to render each item.
-        <div key={dish.id} className="col-12 mt-5">
-          <Media tag="li">
-            <Media left middle>
-              <Media object src={dish.image} alt={dish.name} />
-            </Media>
-            <Media body className="ml-5">
-              <Media heading>{dish.name}</Media>
-              <p>{dish.description}</p>
-            </Media>
-          </Media>
+        // "key" will enable it to identify each of those elements uniquely.
+        // the CardImg to render the image.
+        // onClick method, when it's clicked, it is going to call the function which
+        // implement in a short while called "this.DishSelect",
+        // and then pass the dish information as a parameter to that.
+        // So, when it's clicked on the card, that card is passed into this method call "onDishSelect".
+        <div key={dish.id} className="col-12 col-md-5 m-1">
+          <Card key={dish.id} onClick={() => this.onDishSelect(dish)}>
+            <CardImg width="100%" src={dish.image} alt={dish.name} />
+            <CardImgOverlay>
+              <CardTitle>{dish.name}</CardTitle>
+            </CardImgOverlay>
+          </Card>
         </div>
       );
     });
     return (
       <div className="container">
+        <div className="row">{menu}</div>
         <div className="row">
-          <Media list>{menu}</Media>
+          <div className="col-12 col-md-5 m-1">
+            {this.renderDish(this.state.selectedDish)}
+          </div>
         </div>
       </div>
     );
