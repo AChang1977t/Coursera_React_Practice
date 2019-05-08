@@ -4,6 +4,7 @@ import Menu from "./MenuComponents"; // 匯入 Menu的資訊
 import DishDetail from "./DishdetailComponent";
 import { DISHES } from "../shared/dishes";
 
+// container component -> parenet component
 class Main extends Component {
   constructor(props) {
     super(props);
