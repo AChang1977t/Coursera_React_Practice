@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Navbar, NavbarBrand } from "reactstrap";
 import Menu from "./MenuComponents"; // 匯入 Menu的資訊
 import DishDetail from "./DishdetailComponent";
 import { DISHES } from "../shared/dishes";
+import Header from "./HeaderCommponent";
+import Footer from "./FooterComponent";
 
-// container component -> parenet component
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -29,11 +29,7 @@ class Main extends Component {
       // Menu dishes => make dishes available as props to the menu component
       // Menu "dishes" that is defined in the state (as above "this.state =") for App component
       <div>
-        <Navbar dark color="primary">
-          <div className="container">
-            <NavbarBrand href="/">Ristorante Con Fusion</NavbarBrand>
-          </div>
-        </Navbar>
+        <Header />
         <Menu
           dishes={this.state.dishes}
           onClick={dishId => this.onDishSelect(dishId)}
@@ -45,6 +41,7 @@ class Main extends Component {
             )[0]
           }
         />
+        <Footer />
       </div>
     );
   }
