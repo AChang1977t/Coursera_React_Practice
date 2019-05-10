@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import Menu from "./MenuComponents"; // 匯入 Menu的資訊
-import DishDetail from "./DishdetailComponent";
 import { DISHES } from "../shared/dishes";
-import Header from "./HeaderCommponent";
+import { COMMENTS } from "../shared/comments";
+import { LEADERS } from "../shared/leaders";
+import { PROMOTIONS } from "../shared/promotions";
+import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
 import Home from "./HomeComponent";
+import Contact from "./ContactComponent";
 import { Switch, Route, Redirect } from "react-router-dom"; // import components of react-router-dom
 
 class Main extends Component {
@@ -12,23 +15,25 @@ class Main extends Component {
     super(props);
     this.state = {
       // define the state here
-      dishes: DISHES // JS Object
-      // remove => SelectedDish: null
+      dishes: DISHES, // JS dishes Object
+      comments: COMMENTS, // comments Object
+      leaders: LEADERS, // leaders Object
+      promotions: PROMOTIONS // promotions Object
     };
   }
 
-  // //Implement this onDishSelect.
-  // // Received the dish as the parameter,
-  // onDishSelect(dishId) {
-  //   // Using this.setState function call,
-  //   // inside "dish" will be set equal to the dish which received as the parameter.
-  //   this.setState({ selectedDish: dishId });
-  // }
-
   render() {
     // declare function component HomePage and using arrow function to define it.
+    // and rendering featured dish/comment/promotion/leader
+    // using homepage functional component that to pass these three attributes or props from home component
     const HomePage = () => {
-      return <Home />;
+      return (
+        <Home
+          dish={this.state.dishes.filter(dish => dish.featured)[0]}
+          promotion={this.state.promotions.filter(promo => promo.featured)[0]}
+          leader={this.state.leaders.filter(leader => leader.featured)[0]}
+        />
+      );
     };
     return (
       // Using MainComponent to navigate (two routes) HomeComponent and MenuComponent
@@ -46,19 +51,10 @@ class Main extends Component {
             path="/menu"
             component={() => <Menu dishes={this.state.dishes} />}
           />
+          {/* for Contact component, if you don't need to pass any props, you don't need to use "state" */}
+          <Route exact path="/contactus" component={Contact} />
           <Redirect to="/home" />
         </Switch>
-        {/* <Menu
-          dishes={this.state.dishes}
-          onClick={dishId => this.onDishSelect(dishId)}
-        />
-        <DishDetail
-          selectDish={
-            this.state.dishes.filter(
-              dish => dish.id === this.state.selectedDish
-            )[0]
-          }
-        /> */}
         <Footer />
       </div>
     );
