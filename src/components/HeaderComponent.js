@@ -6,7 +6,15 @@ import {
   NavbarToggler,
   Collapse,
   NavItem,
-  Jumbotron
+  Jumbotron,
+  Button,
+  ModalHeader,
+  Modal,
+  ModalBody,
+  Form,
+  FormGroup,
+  Label,
+  Input
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 // { NavLink } will add an a tag to that link, and automatically add the active if the URL matches.
@@ -16,11 +24,14 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inNavOpen: false
+      inNavOpen: false,
+      isModalOpen: false // for trigger modalBody
     };
 
     // In react, making this method available for using within JSX, that needs to "bind" this in code.
     this.toggleNav = this.toggleNav.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
   // implement toggleNav method, when {this.toggleNav} is onclick.
@@ -28,6 +39,26 @@ class Header extends Component {
     this.setState({
       isNavOpen: !this.state.isNavOpen
     });
+  }
+
+  // to set this up to control modal
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    });
+  }
+
+  handleLogin(event) {
+    this.toggleModal();
+    alert(
+      "username: " +
+        this.username.value +
+        " password: " +
+        this.password.value +
+        " Remember: " +
+        this.remember.checked
+    );
+    event.preventDefault();
   }
 
   // render method
@@ -72,6 +103,17 @@ class Header extends Component {
                   </NavLink>
                 </NavItem>
               </Nav>
+
+              {/*setting button to invoke the modal*/}
+              <Nav className="ml-auto" navbar>
+                <NavItem>
+                  <Button outline onClick={this.toggleModal}>
+                    {" "}
+                    {/*when this click that will invoke the toggleModal */}
+                    <span className="fa fa-sign-in fa-lg">Login</span>
+                  </Button>
+                </NavItem>
+              </Nav>
             </Collapse>
           </div>
         </Navbar>
@@ -89,6 +131,48 @@ class Header extends Component {
             </div>
           </div>
         </Jumbotron>
+        {/*Using Modal to set up uncontrolled form - login*/}
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+          {/*how to make this modal to be shown and hidden, need to set up trigger this modal, using isModalOpen*/}
+          <ModalBody>
+            <Form onSubmit={this.handleLogin}>
+              <FormGroup>
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  type="text"
+                  id="username"
+                  name="username"
+                  innerRef={input =>
+                    (this.username = input)
+                  } /*using innerRef to retrieve the value */
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  innerRef={input => (this.password = input)}
+                />
+              </FormGroup>
+              <FormGroup check>
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    name="remember"
+                    innerRef={input => (this.remember = input)}
+                  />
+                  Remember me
+                </Label>
+              </FormGroup>
+              <Button type="submit" value="submit" color="primary">
+                Login
+              </Button>
+            </Form>
+          </ModalBody>
+        </Modal>
       </React.Fragment>
     );
   }
