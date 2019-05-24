@@ -1,39 +1,42 @@
 import React, { Component } from "react";
 import Menu from "./MenuComponents"; // 匯入 Menu的資訊
-import { DISHES } from "../shared/dishes";
-import { COMMENTS } from "../shared/comments";
-import { LEADERS } from "../shared/leaders";
-import { PROMOTIONS } from "../shared/promotions";
 import DishDetail from "./DishdetailComponent";
 import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
 import Home from "./HomeComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
-import { Switch, Route, Redirect } from "react-router-dom"; // import components of react-router-dom
+import { Switch, Route, Redirect, withRouter } from "react-router-dom"; // import components of react-router-dom
+import { connect } from "react-redux";
+
+// define mapStateToProps function which obtains the state as a parameter.
+// the state is from Redux store
+// return those to become available as props to maincomponent.js
+const mapStateToProps = state => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders
+  };
+};
 
 class Main extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      // define the state here
-      dishes: DISHES, // JS dishes Object
-      comments: COMMENTS, // comments Object
-      leaders: LEADERS, // leaders Object
-      promotions: PROMOTIONS // promotions Object
-    };
   }
 
   render() {
     // declare function component HomePage and using arrow function to define it.
     // and rendering featured dish/comment/promotion/leader
     // using homepage functional component that to pass these three attributes or props from home component
+    // we set dish/comment/promotion/leader to mapStateToProps as state, so here should be as props that come in as properties for the mainComponent
     const HomePage = () => {
       return (
         <Home
-          dish={this.state.dishes.filter(dish => dish.featured)[0]}
-          promotion={this.state.promotions.filter(promo => promo.featured)[0]}
-          leader={this.state.leaders.filter(leader => leader.featured)[0]}
+          dish={this.props.dishes.filter(dish => dish.featured)[0]}
+          promotion={this.props.promotions.filter(promo => promo.featured)[0]}
+          leader={this.props.leaders.filter(leader => leader.featured)[0]}
         />
       );
     };
@@ -44,11 +47,11 @@ class Main extends Component {
       return (
         <DishDetail
           selectDish={
-            this.state.dishes.filter(
+            this.props.dishes.filter(
               dish => dish.id === parseInt(match.params.dishId, 10)
             )[0]
           }
-          comments={this.state.comments.filter(
+          comments={this.props.comments.filter(
             comment => comment.dishId === parseInt(match.params.dishId, 10)
           )}
         />
@@ -69,7 +72,7 @@ class Main extends Component {
           <Route
             exact
             path="/menu"
-            component={() => <Menu dishes={this.state.dishes} />}
+            component={() => <Menu dishes={this.props.dishes} />}
           />
           <Route path="/menu/:dishId" component={DishWithId} />
           {/* for Contact component, if you don't need to pass any props, you don't need to use "state" */}
@@ -77,7 +80,7 @@ class Main extends Component {
           <Route
             exact
             path="/aboutus"
-            component={() => <About leaders={this.state.leaders} />}
+            component={() => <About leaders={this.props.leaders} />}
           />
           <Redirect to="/home" />
         </Switch>
@@ -87,4 +90,5 @@ class Main extends Component {
   }
 }
 
-export default Main;
+// connect component file to redux store
+export default withRouter(connect(mapStateToProps)(Main));
