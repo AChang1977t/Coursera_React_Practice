@@ -17,6 +17,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
+import { Loading } from "./LoadingComponent";
 
 // Implementing simple form validation
 const required = val => val && val.length;
@@ -183,7 +184,23 @@ function RenderComments({ comments, addComment, dishId }) {
 
 // Functional component
 const DishDetail = props => {
-  if (props.selectDish != null) {
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  } else if (props.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <h4>{props.errMess}</h4>
+        </div>
+      </div>
+    );
+  } else if (props.selectDish != null) {
     // const { selectDish } = props;
     return (
       <div className="container">
