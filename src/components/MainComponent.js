@@ -9,6 +9,7 @@ import About from "./AboutComponent";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom"; // import components of react-router-dom
 import { connect } from "react-redux";
 import { addComment, fetchDishes } from "../redux/ActionCreators"; // import action creators
+import { actions } from "react-redux-form";
 
 // define mapStateToProps function which obtains the state as a parameter.
 // the state is from Redux store
@@ -28,6 +29,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addComment(dishId, rating, author, comment)),
   fetchDishes: () => {
     dispatch(fetchDishes());
+  },
+  resetFeedbackForm: () => {
+    dispatch(actions.reset("feedback"));
   }
 });
 
@@ -96,7 +100,13 @@ class Main extends Component {
           />
           <Route path="/menu/:dishId" component={DishWithId} />
           {/* for Contact component, if you don't need to pass any props, you don't need to use "state" */}
-          <Route exact path="/contactus" component={Contact} />
+          <Route
+            exact
+            path="/contactus"
+            component={() => (
+              <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+            )}
+          />
           <Route
             exact
             path="/aboutus"
