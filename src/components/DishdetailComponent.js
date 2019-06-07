@@ -18,6 +18,7 @@ import {
 import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
 import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
 
 // Implementing simple form validation
 const required = val => val && val.length;
@@ -144,7 +145,7 @@ function RenderDish({ selectDish }) {
   return (
     // Card component
     <Card>
-      <CardImg top src={selectDish.image} alt={selectDish.name} />
+      <CardImg top src={baseUrl + selectDish.image} alt={selectDish.name} />
       <CardBody>
         <CardTitle>{selectDish.name}</CardTitle>
         <CardText>{selectDish.description}</CardText>

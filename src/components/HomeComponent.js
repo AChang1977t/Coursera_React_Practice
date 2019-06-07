@@ -8,6 +8,7 @@ import {
   CardSubtitle
 } from "reactstrap";
 import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
 
 // renderCard will receive props here, props will contain one property which is "item".
 // return to create a card information, import component of reactstrap and render the card
@@ -21,7 +22,7 @@ function RenderCard({ item, isLoading, errMess }) {
       // render a Card component
       // {xxxx ? A : B => if xxx is true return A, else return B}
       <Card>
-        <CardImg src={item.image} alt={item.name} />
+        <CardImg src={baseUrl + item.image} alt={item.name} />
         <CardBody>
           <CardTitle>{item.name}</CardTitle>
           {item.designation ? (
@@ -47,7 +48,11 @@ function Home(props) {
           />
         </div>
         <div className="col-12 col-md m-1">
-          <RenderCard item={props.promotion} />
+          <RenderCard
+            item={props.promotion}
+            isLoading={props.promosLoading}
+            errMess={props.promosErrMess}
+          />
         </div>
         <div className="col-12 col-md m-1">
           <RenderCard item={props.leader} />
