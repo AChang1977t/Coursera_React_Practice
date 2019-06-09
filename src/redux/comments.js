@@ -25,8 +25,6 @@ export const Comments = (
 
     case ActionTypes.ADD_COMMENT:
       var comment = action.payload;
-      comment.id = state.comments.length;
-      comment.date = new Date().toISOString();
 
       // we can't modify the state the we sent in as the parameter
       // so we use "concat function" to create a new object to pushes the new element into the array

@@ -2,18 +2,63 @@ import * as ActionTypes from "../redux/ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
 
 // Creat action object
-// using arrow function with 4 parameters and return JS object
-export const addComment = (dishId, rating, author, comment) => ({
+// using arrow function with parameters and return JS object
+export const addComment = comment => ({
   // 1) define the type
   // 2) define "payload" that carried the data that sent back by addComment
   type: ActionTypes.ADD_COMMENT,
-  payload: {
+  payload: comment
+});
+
+// create another action creator call post comment
+export const postComment = (dishId, rating, author, comment) => dispatch => {
+  const newComment = {
     dishId: dishId,
     rating: rating,
     author: author,
     comment: comment
-  }
-});
+  };
+  // add another property called date
+  newComment.date = new Date().toISOString();
+  // return a fetch operation => be a post operation
+  return fetch(
+    baseUrl + "comments",
+    // below structure of the request msg that going on.
+    {
+      method: "POST",
+      body: JSON.stringify(newComment),
+      headers: {
+        "content-Type": "application/json"
+      },
+      credentials: "same-origin"
+    }
+  )
+    .then(
+      response => {
+        // first part is a situation where you receive a response from server
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error(
+            "Error" + response.status + ": " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+        // second part that is where you will have to handle the error appropriate.
+        var errmess = new Error(error.message);
+        throw errmess;
+      }
+    )
+    .then(response => response.json())
+    .then(response => dispatch(addComment(response)))
+    .catch(error => {
+      console.log("post comments ", error.message);
+      alert("Your comment could not be posted\nError: " + error.message);
+    });
+};
 
 // first Thunk - fetchDishes that is return a function that is call or dispatch sever actions
 // create 4 action creators functions
