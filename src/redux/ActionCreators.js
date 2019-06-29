@@ -1,5 +1,6 @@
 import * as ActionTypes from "../redux/ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
+import { string } from "postcss-selector-parser";
 
 // Creat action object
 // using arrow function with parameters and return JS object
@@ -57,6 +58,72 @@ export const postComment = (dishId, rating, author, comment) => dispatch => {
     .catch(error => {
       console.log("post comments ", error.message);
       alert("Your comment could not be posted\nError: " + error.message);
+    });
+};
+
+export const addFeedback = feedback => ({
+  type: ActionTypes.ADD_FEEDBACK,
+  payload: feedback
+});
+
+// create another action creator call post comment
+export const postFeedback = (
+  firstname,
+  lastname,
+  telnum,
+  email,
+  agree,
+  contactType,
+  message
+) => dispatch => {
+  const newFeedback = {
+    firstname: firstname,
+    lastname: lastname,
+    telnum: telnum,
+    email: email,
+    agree: agree,
+    contactType: contactType,
+    message: message
+  };
+  // add another property called date
+  newFeedback.date = new Date().toISOString();
+  // return a fetch operation => be a post operation
+  return fetch(
+    baseUrl + "Feedback",
+    // below structure of the request msg that going on.
+    {
+      method: "POST",
+      body: JSON.stringify(newFeedback),
+      headers: {
+        "content-Type": "application/json"
+      },
+      credentials: "same-origin"
+    }
+  )
+    .then(
+      response => {
+        // first part is a situation where you receive a response from server
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error(
+            "Error" + response.status + ": " + response.statusText
+          );
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+        // second part that is where you will have to handle the error appropriate.
+        var errmess = new Error(error.message);
+        throw errmess;
+      }
+    )
+    .then(response => response.json())
+    .then(response => dispatch(addFeedback(response)))
+    .catch(error => {
+      console.log("post Feedback ", error.message);
+      alert("Your Feedback could not be posted\nError: " + error.message);
     });
 };
 
@@ -207,7 +274,8 @@ export const fetchLeaders = () => dispatch => {
       }
     )
     .then(response => response.json())
-    .then(leaders => dispatch(addLeaders(leaders)));
+    .then(leaders => dispatch(addLeaders(leaders)))
+    .catch(error => dispatch(leadersFailed(error.message)));
 };
 
 export const leadersLoading = () => ({

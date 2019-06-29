@@ -29,9 +29,19 @@ class Contact extends Component {
   }
 
   handleSubmit(values) {
-    console.log("current State is:" + JSON.stringify(values));
-    alert("current State is:" + JSON.stringify(values));
+    console.log("Thank you for your feedback! " + JSON.stringify(values));
+    alert("Thank you for your feedback! " + JSON.stringify(values));
     this.props.resetFeedbackForm();
+    this.props.postFeedback(
+      values.firstName,
+      values.lastName,
+      values.telNum,
+      values.eMail,
+      values.agree,
+      values.contactType,
+      values.message,
+      values.id
+    );
   }
 
   render() {
@@ -172,7 +182,7 @@ class Contact extends Component {
                 </Label>
                 <Col md={10}>
                   <Control.text
-                    model=".tel"
+                    model=".telNum"
                     id="telNum"
                     name="telNum"
                     placeholder="Tel. Number"
@@ -203,7 +213,7 @@ class Contact extends Component {
                 </Label>
                 <Col md={10}>
                   <Control.text
-                    model=".email"
+                    model=".eMail"
                     id="eMail"
                     name="eMail"
                     placeholder="Email"
@@ -226,7 +236,7 @@ class Contact extends Component {
                   <div className="form-check">
                     <Label check>
                       <Control.checkbox
-                        model=".checkbox"
+                        model=".agree"
                         name="agree"
                         className="form-check-input"
                       />
