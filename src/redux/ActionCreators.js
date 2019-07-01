@@ -61,11 +61,6 @@ export const postComment = (dishId, rating, author, comment) => dispatch => {
     });
 };
 
-// export const addFeedback = feedback => ({
-//   type: ActionTypes.ADD_FEEDBACK,
-//   payload: feedback
-// });
-
 // create another action creator call post comment, set feedback object as a parameter
 export const postFeedback = feedback => dispatch => {
   const newFeedback = {
