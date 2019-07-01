@@ -61,29 +61,15 @@ export const postComment = (dishId, rating, author, comment) => dispatch => {
     });
 };
 
-export const addFeedback = feedback => ({
-  type: ActionTypes.ADD_FEEDBACK,
-  payload: feedback
-});
+// export const addFeedback = feedback => ({
+//   type: ActionTypes.ADD_FEEDBACK,
+//   payload: feedback
+// });
 
-// create another action creator call post comment
-export const postFeedback = (
-  firstname,
-  lastname,
-  telnum,
-  email,
-  agree,
-  contactType,
-  message
-) => dispatch => {
+// create another action creator call post comment, set feedback object as a parameter
+export const postFeedback = feedback => dispatch => {
   const newFeedback = {
-    firstname: firstname,
-    lastname: lastname,
-    telnum: telnum,
-    email: email,
-    agree: agree,
-    contactType: contactType,
-    message: message
+    ...feedback
   };
   // add another property called date
   newFeedback.date = new Date().toISOString();
@@ -120,7 +106,9 @@ export const postFeedback = (
       }
     )
     .then(response => response.json())
-    .then(response => dispatch(addFeedback(response)))
+    .then(response =>
+      alert("Thank you for your feedback! " + JSON.stringify(response))
+    )
     .catch(error => {
       console.log("post Feedback ", error.message);
       alert("Your Feedback could not be posted\nError: " + error.message);
